@@ -74,6 +74,7 @@ def main(argv):
 
     key = frozen_credentials.access_key
     secretKey = frozen_credentials.secret_key
+    secretKey = secretKey.replace("+", "%2B")
     
     my_session = boto3.session.Session(profile_name=AWS_CLI_DASHBOARD_PROFILE)
     REGION = my_session.region_name 
