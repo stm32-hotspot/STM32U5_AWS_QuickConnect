@@ -20,6 +20,7 @@ from utils.getDeviceName import *
 import getopt
 import getpass
 import platform
+from halo import Halo
 
 VERSION = "1.3.1"
 
@@ -129,13 +130,33 @@ def main(argv):
         aws_dashboard_profile = getParam(aws_dashboard_profile, "AWS_CLI_PROVISION_PROFILE")
         dashboard_url = getParam(dashboard_url, "DASHBOARD_URL")
 
-    
+    spinner = Halo(text='', spinner='dots')
+
+    print("Flashing Firmware")
+    spinner.start()
     cmd(['python', 'utils/flash.py', '--bin-file='+BIN_FILE])
+    spinner.stop()
+
+    print("Setting Wi-Fi parameters")
+    spinner.start()
     cmd(['python', 'utils/setWiFiParam.py', '--ssid=' + DUMMY_SSID, '--password='+ DUMMY_PSWD])
+    spinner.stop()
+
+    print("Privisionong STM32 with AWS")
     cmd(['python', 'utils/provision.py', '--thing-name=' + name, '--wifi-ssid=' +  ssid, '--wifi-credential=' + pswd, '--aws-profile=' + aws_provision_profile])
-    cmd(['python', 'utils/openDashboard.py', '--device-id='+ name, '--dashboard-profile='+aws_dashboard_profile,   '--dashboard-url='+ dashboard_url])
-    cmd(['python', 'utils/getConfig.py', '--device-id='+ name, '--profile='+aws_provision_profile, '--wifi-ssid=' +  ssid, '--wifi-credential=' + pswd])
+
+    #cmd(['python', 'utils/getConfig.py', '--device-id='+ name, '--profile='+aws_provision_profile, '--wifi-ssid=' +  ssid, '--wifi-credential=' + pswd])
+
+    print("Waiting for STM32 to connect to AWS")
+    spinner.start()
     cmd(['python', 'utils/readSerial.py'])
+    spinner.stop()
+    print("Connected to AWS")
+
+    print("Opening Dashboard")
+    spinner.start()
+    cmd(['python', 'utils/openDashboard.py', '--device-id='+ name, '--dashboard-profile='+aws_dashboard_profile,   '--dashboard-url='+ dashboard_url])
+    spinner.stop()
 
 
 ################################
