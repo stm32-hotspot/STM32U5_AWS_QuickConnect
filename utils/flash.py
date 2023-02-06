@@ -11,7 +11,7 @@
 # * the "License"; You may not use this file except in compliance with the
 # * License. You may obtain a copy of the License at:
 # *                        opensource.org/licenses/BSD-3-Clause
-# ******************************************************************************
+#*********************************************************************
 import serial
 import serial.tools.list_ports
 import os
@@ -43,7 +43,7 @@ def flash_board(flashing_file, USBPATH, COM):
     else:
         cmd = 'cp "'+flashing_file+'" "'+USBPATH+'File.bin"'
 
-    print(cmd)
+    #print(cmd)
 
     err = os.system(cmd)
     if err!=0:

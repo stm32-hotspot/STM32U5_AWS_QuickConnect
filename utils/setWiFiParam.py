@@ -68,19 +68,19 @@ def main(argv):
             sys.exit(1)
 
         elif opt in ("--ssid"):
-            print("Setting Wi-Fi SSID")
+            #print("Setting Wi-Fi SSID")
             set_param(com, 'wifi_ssid', arg, ser)
             Commit = True
 
         elif opt in ("--password"):
-            print("Setting Wi-Fi Password")
+            #print("Setting Wi-Fi Password")
             set_param(com, 'wifi_credential', arg, ser)
             Commit = True
 
     if (Commit == True):
-        print("Commit changes")
+        #print("Commit changes")
         commit(ser)
-        print("Device reset")
+        #print("Device reset")
         reset(ser)
     
     ser.close()

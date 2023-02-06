@@ -25,13 +25,28 @@ def get_com():
     
     return " PORT ERR "
             
+# Read a line from serial port
+def read_line(ser):
+    line = ser.readline().decode("utf-8", errors='ignore')
+    return line
+
+# Wait for STM32 to connect to AWS
+def wait_for_stm32_connection(COM):
+    ser = serial.Serial(COM, 115200)
+    stm32_ok_found = False
+    while stm32_ok_found == False:
+        line = read_line(ser)
+        #print(line, end = '')
+
+        if "[MQTTAgent ] Connected socket:" in line:
+            stm32_ok_found = True
+            time.sleep(1)
 
 # Indefinitely read serial communication
 def serial_reader(COM):
     ser = serial.Serial(COM, 115200)
 
     #reading serial port indefinitely
-
     try:
         while True:
             if ser.in_waiting > 0:
@@ -43,12 +58,9 @@ def serial_reader(COM):
         quit()
         
 
-
-    
-
-
 if __name__ == "__main__":
-    serial_reader(get_com())
+    #serial_reader(get_com())
+    wait_for_stm32_connection(get_com())
 
 
 #************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/        
